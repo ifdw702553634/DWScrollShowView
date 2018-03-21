@@ -7,132 +7,120 @@
 //
 
 #import "DWScrollShowView.h"
-#import "DWScrollFlowLaout.h"
-#import "DWScrollCollectionViewCell.h"
+#import "DWScrollShowViewCell.h"
 
-#define SCREEN_HEIGHT ((([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationPortrait) || ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationPortraitUpsideDown)) ? [[UIScreen mainScreen] bounds].size.height : [[UIScreen mainScreen] bounds].size.width)
+@interface DWScrollShowView ()<UIScrollViewDelegate>
 
-#define SCREEN_WIDTH  ((([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationPortrait) || ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationPortraitUpsideDown)) ? [[UIScreen mainScreen] bounds].size.width : [[UIScreen mainScreen] bounds].size.height)
+@property (nonatomic, strong) UIScrollView *scrollView;
 
-@interface DWScrollShowView()<UICollectionViewDelegate,UICollectionViewDataSource>{
-    CGRect _frame;
-    NSMutableArray *_textArr;
-}
-@property (assign,nonatomic) NSInteger currentIndex;
-@property (assign,nonatomic) CGFloat dragStartX;
-@property (assign,nonatomic) CGFloat dragEndX;
+@property (nonatomic, strong) NSArray *rollDataArr;//数据源
 
-@property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, assign) float halfGap;//图片间距的一半
 
+@property (nonatomic, assign) NSInteger curIndex;
 @end
 
 @implementation DWScrollShowView
-- (instancetype)initWithFrame:(CGRect)frame withData:(NSArray *)textArr{
+
+- (instancetype)initWithFrame:(CGRect)frame withDistanceForScroll:(float)distance withGap:(float)gap{
     self = [super initWithFrame:frame];
     if (self) {
-        _frame = frame;
-        [self prepareCollection];
-        _textArr = [[NSMutableArray alloc] init];
-        for (int i=0; i<4; i++) {
-            [_textArr addObjectsFromArray:textArr];
-        }
-        [_collectionView reloadData];
-        [_collectionView layoutIfNeeded];
-        [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:_textArr.count/2 inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
-        _currentIndex = _textArr.count/2;
+        self.halfGap = gap / 2;
+        _curIndex = 1;
+        /** 设置 UIScrollView */
+        self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(distance, 0, self.frame.size.width - 2 * distance, self.frame.size.height)];
+        [self addSubview:self.scrollView];
+        self.scrollView.pagingEnabled = YES;
+        self.scrollView.delegate = self;
+        self.scrollView.clipsToBounds = NO;
+        /** 添加手势 */
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];
+        tap.numberOfTapsRequired = 1;
+        tap.numberOfTouchesRequired = 1;
+        [self.scrollView addGestureRecognizer:tap];
+        self.scrollView.showsHorizontalScrollIndicator = NO;
+        
+        /** 数据初始化 */
+        self.rollDataArr = [NSArray array];
     }
     return self;
 }
 
-- (void)prepareCollection{
-    DWScrollFlowLaout *flowLayout = [[DWScrollFlowLaout alloc] init];
-    flowLayout.itemSize = CGSizeMake(SCREEN_WIDTH-40, 100);
-    flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    flowLayout.minimumLineSpacing = 0;
-    flowLayout.minimumInteritemSpacing = 0;
-    _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, _frame.size.width, _frame.size.height) collectionViewLayout:flowLayout];
-    _collectionView.backgroundColor = [UIColor clearColor];
-    _collectionView.pagingEnabled = YES;
-    _collectionView.showsHorizontalScrollIndicator = NO;
-    _collectionView.showsVerticalScrollIndicator = NO;
-    _collectionView.dataSource = self;
-    _collectionView.delegate = self;
-    _collectionView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.collectionView.contentSize = CGSizeMake(_textArr.count*(SCREEN_WIDTH-80), 0);
-    [_collectionView registerClass:[DWScrollCollectionViewCell class] forCellWithReuseIdentifier:@"DWScrollCollectionViewCell"];
-    [self addSubview:_collectionView];
-}
-
-
-//配置cell居中
-- (void)fixCellToCenter {
-    //最小滚动距离
-    float dragMiniDistance = self.bounds.size.width/20.0f;
-    if (self.dragStartX -  self.dragEndX >= dragMiniDistance) {
-        self.currentIndex -= 1;//向右
-    }else if(self.dragEndX -  self.dragStartX >= dragMiniDistance){
-        self.currentIndex += 1;//向左
+#pragma mark - 视图数据
+- (void)rollView:(NSArray *)dataArr{
+    self.rollDataArr = dataArr;
+    //循环创建添加轮播图片, 前后各添加一张
+    for (int i = 0; i < self.rollDataArr.count + 2; i++) {
+        for (UIView *underView in self.scrollView.subviews) {
+            if (underView.tag == 400 + i) {
+                [underView removeFromSuperview];
+            }
+        }
+        DWScrollShowViewCell *vCell = [[DWScrollShowViewCell alloc] initWithFrame:CGRectMake((2 * i + 1) * self.halfGap + i * (self.scrollView.frame.size.width - 2*self.halfGap) + 10, 0, (self.scrollView.frame.size.width - 2*self.halfGap), self.frame.size.height)];
+        vCell.tag = 400 + i;
+        
+        if (i == 0) {
+            vCell.label.text = self.rollDataArr[self.rollDataArr.count - 1];
+        }else if (i == self.rollDataArr.count+1) {
+            vCell.label.text = self.rollDataArr[0];
+        }else {
+            vCell.label.text = self.rollDataArr[i - 1];
+        }
+        [self.scrollView addSubview:vCell];
     }
-    NSInteger maxIndex = [_collectionView numberOfItemsInSection:0] - 1;
-    self.currentIndex = self.currentIndex <= 0 ? 0 : self.currentIndex;
-    self.currentIndex = self.currentIndex >= maxIndex ? maxIndex : self.currentIndex;
-    [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.currentIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
+    //设置轮播图当前的显示区域
+    self.scrollView.contentOffset = CGPointMake(self.scrollView.frame.size.width, 0);
+    self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width * (self.rollDataArr.count + 2), 0);
 }
 
-#pragma mark --- UICollectionviewDelegate or dataSource
--(NSInteger) numberOfSectionsInCollectionView:(UICollectionView *)collectionView
-{
-    return 1;
-}
-
--(NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
-{
-    return _textArr.count;
-}
-
--(UICollectionViewCell *) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-   DWScrollCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"DWScrollCollectionViewCell" forIndexPath:indexPath];
-    cell.label.text = _textArr[indexPath.row];
-    cell.buttonBlock = ^(){
-        //点击view切换到以该view为中心
-        self.currentIndex = indexPath.row;
-        [collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
-    };
-    return cell;
-}
-
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    //防止点击空白区域发生偏移
-    [collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.currentIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
-}
-
-#pragma mark - UIScrollViewDelegate
-
-//手指拖动开始
--(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    self.dragStartX = scrollView.contentOffset.x;
-}
-
-//手指拖动停止
--(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    self.dragEndX = scrollView.contentOffset.x;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self fixCellToCenter];
-    });
-}
-
-- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
-{
-    if (self.currentIndex == [_textArr count]/4*3) {
-        NSIndexPath *path  = [NSIndexPath indexPathForItem:[_textArr count]/2 inSection:0];
-        [self.collectionView scrollToItemAtIndexPath:path atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
-        self.currentIndex = [_textArr count]/2;
-    }else if(self.currentIndex == [_textArr count]/4){
-        NSIndexPath *path = [NSIndexPath indexPathForItem:[_textArr count]/2 inSection:0];
-        [self.collectionView scrollToItemAtIndexPath:path atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
-        self.currentIndex = [_textArr count]/2;
+#pragma mark - UIScrollViewDelegate 方法
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    _curIndex = scrollView.contentOffset.x  / self.scrollView.frame.size.width;
+    if (_curIndex == self.rollDataArr.count + 1) {
+        scrollView.contentOffset = CGPointMake(self.scrollView.frame.size.width, 0);
+    }else if (_curIndex == 0){
+        scrollView.contentOffset = CGPointMake(self.scrollView.frame.size.width * self.rollDataArr.count, 0);
+    }
+    UIWindow * window=[[[UIApplication sharedApplication] delegate] window];
+    for (int i = 0; i < self.rollDataArr.count + 2; i++) {
+        NSInteger index = i + 400;
+        UIView *view = [self viewWithTag:index];
+        CGRect rect=[view convertRect: view.bounds toView:window];
+        if (i == _curIndex) {
+            view.alpha = 1.0f;
+        }else if (fabs(rect.origin.x) > self.scrollView.frame.size.width*2){
+            view.alpha = 0;
+        }else{
+            view.alpha = 1-(fabs(rect.origin.x)/self.scrollView.frame.size.width)+0.4;
+        }
     }
 }
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    UIWindow * window=[[[UIApplication sharedApplication] delegate] window];
+    for (int i = 0; i < self.rollDataArr.count + 2; i++) {
+        NSInteger index = i + 400;
+        UIView *view = [self viewWithTag:index];
+        CGRect rect=[view convertRect: view.bounds toView:window];
+        if (i == _curIndex) {
+            view.alpha = 1.0f;
+        }else if (fabs(rect.origin.x) > self.scrollView.frame.size.width*2){
+            view.alpha = 0;
+        }else{
+            view.alpha = 1-(fabs(rect.origin.x)/self.scrollView.frame.size.width)+0.4;
+        }
+    }
+}
+
+#pragma mark - 轻拍手势的方法
+- (void)tapAction:(UITapGestureRecognizer *)tap{
+    if ([self.rollDataArr isKindOfClass:[NSArray class]] && (self.rollDataArr.count > 0)) {
+        [_delegate didSelectViewWithIndexPath:(self.scrollView.contentOffset.x / self.scrollView.frame.size.width)];
+    }else{
+        [_delegate didSelectViewWithIndexPath:-1];
+    }
+    
+}
+
 
 @end

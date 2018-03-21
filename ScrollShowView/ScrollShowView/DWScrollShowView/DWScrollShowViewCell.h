@@ -1,5 +1,5 @@
 //
-//  DWScrollCollectionViewCell.h
+//  DWScrollShowViewCell.h
 //  ScrollShowView
 //
 //  Created by mude on 2018/3/21.
@@ -8,15 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void(^ButtonBlock)(void);
-
-@interface DWScrollCollectionViewCell : UICollectionViewCell
+@interface DWScrollShowViewCell : UIView
 
 @property (strong, nonatomic) UIView *view;
 @property (strong, nonatomic) UILabel *label;
 @property (strong, nonatomic) UIButton *button;
-@property (nonatomic, assign) CGFloat gap;
-@property (nonatomic, assign) CGRect frame;
-@property (nonatomic, copy) ButtonBlock buttonBlock;
 
 @end

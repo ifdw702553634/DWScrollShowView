@@ -13,9 +13,11 @@
 		C34EB40A2061FE3B00FBCE64 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C34EB4092061FE3B00FBCE64 /* main.m */; };
 		C34EB4142061FE3B00FBCE64 /* ScrollShowViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C34EB4132061FE3B00FBCE64 /* ScrollShowViewTests.m */; };
 		C34EB41F2061FE3B00FBCE64 /* ScrollShowViewUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = C34EB41E2061FE3B00FBCE64 /* ScrollShowViewUITests.m */; };
-		C34EB42F2061FF6A00FBCE64 /* DWScrollShowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C34EB42E2061FF6A00FBCE64 /* DWScrollShowView.m */; };
+		C34EB42F2061FF6A00FBCE64 /* DWCollectionShowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C34EB42E2061FF6A00FBCE64 /* DWCollectionShowView.m */; };
 		C34EB43220620CA700FBCE64 /* DWScrollFlowLaout.m in Sources */ = {isa = PBXBuildFile; fileRef = C34EB43120620CA700FBCE64 /* DWScrollFlowLaout.m */; };
 		C34EB43520620F6E00FBCE64 /* DWScrollCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C34EB43420620F6E00FBCE64 /* DWScrollCollectionViewCell.m */; };
+		C34EB438206249D700FBCE64 /* DWScrollShowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C34EB437206249D700FBCE64 /* DWScrollShowView.m */; };
+		C34EB43B20624B9000FBCE64 /* DWScrollShowViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C34EB43A20624B9000FBCE64 /* DWScrollShowViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,12 +52,16 @@
 		C34EB41A2061FE3B00FBCE64 /* ScrollShowViewUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ScrollShowViewUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C34EB41E2061FE3B00FBCE64 /* ScrollShowViewUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScrollShowViewUITests.m; sourceTree = "<group>"; };
 		C34EB4202061FE3B00FBCE64 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C34EB42D2061FF6A00FBCE64 /* DWScrollShowView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DWScrollShowView.h; sourceTree = "<group>"; };
-		C34EB42E2061FF6A00FBCE64 /* DWScrollShowView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DWScrollShowView.m; sourceTree = "<group>"; };
+		C34EB42D2061FF6A00FBCE64 /* DWCollectionShowView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DWCollectionShowView.h; sourceTree = "<group>"; };
+		C34EB42E2061FF6A00FBCE64 /* DWCollectionShowView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DWCollectionShowView.m; sourceTree = "<group>"; };
 		C34EB43020620CA700FBCE64 /* DWScrollFlowLaout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DWScrollFlowLaout.h; sourceTree = "<group>"; };
 		C34EB43120620CA700FBCE64 /* DWScrollFlowLaout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DWScrollFlowLaout.m; sourceTree = "<group>"; };
 		C34EB43320620F6E00FBCE64 /* DWScrollCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DWScrollCollectionViewCell.h; sourceTree = "<group>"; };
 		C34EB43420620F6E00FBCE64 /* DWScrollCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DWScrollCollectionViewCell.m; sourceTree = "<group>"; };
+		C34EB436206249D700FBCE64 /* DWScrollShowView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DWScrollShowView.h; sourceTree = "<group>"; };
+		C34EB437206249D700FBCE64 /* DWScrollShowView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DWScrollShowView.m; sourceTree = "<group>"; };
+		C34EB43920624B9000FBCE64 /* DWScrollShowViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DWScrollShowViewCell.h; sourceTree = "<group>"; };
+		C34EB43A20624B9000FBCE64 /* DWScrollShowViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DWScrollShowViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,12 +145,16 @@
 		C34EB42C2061FF5200FBCE64 /* DWScrollShowView */ = {
 			isa = PBXGroup;
 			children = (
-				C34EB42D2061FF6A00FBCE64 /* DWScrollShowView.h */,
-				C34EB42E2061FF6A00FBCE64 /* DWScrollShowView.m */,
+				C34EB42D2061FF6A00FBCE64 /* DWCollectionShowView.h */,
+				C34EB42E2061FF6A00FBCE64 /* DWCollectionShowView.m */,
 				C34EB43020620CA700FBCE64 /* DWScrollFlowLaout.h */,
 				C34EB43120620CA700FBCE64 /* DWScrollFlowLaout.m */,
 				C34EB43320620F6E00FBCE64 /* DWScrollCollectionViewCell.h */,
 				C34EB43420620F6E00FBCE64 /* DWScrollCollectionViewCell.m */,
+				C34EB436206249D700FBCE64 /* DWScrollShowView.h */,
+				C34EB437206249D700FBCE64 /* DWScrollShowView.m */,
+				C34EB43920624B9000FBCE64 /* DWScrollShowViewCell.h */,
+				C34EB43A20624B9000FBCE64 /* DWScrollShowViewCell.m */,
 			);
 			path = DWScrollShowView;
 			sourceTree = "<group>";
@@ -285,7 +295,9 @@
 				C34EB3FC2061FE3B00FBCE64 /* AppDelegate.m in Sources */,
 				C34EB43220620CA700FBCE64 /* DWScrollFlowLaout.m in Sources */,
 				C34EB43520620F6E00FBCE64 /* DWScrollCollectionViewCell.m in Sources */,
-				C34EB42F2061FF6A00FBCE64 /* DWScrollShowView.m in Sources */,
+				C34EB438206249D700FBCE64 /* DWScrollShowView.m in Sources */,
+				C34EB42F2061FF6A00FBCE64 /* DWCollectionShowView.m in Sources */,
+				C34EB43B20624B9000FBCE64 /* DWScrollShowViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

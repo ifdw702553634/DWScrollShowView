@@ -17,13 +17,14 @@
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
+    _frame = frame;
     if (self)
     {
         self.backgroundColor = [UIColor clearColor];
-        _view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width-20, frame.size.height)];
+        _view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
         _view.backgroundColor = [UIColor orangeColor];
         [self addSubview:_view];
-        _button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, frame.size.width-20, frame.size.height)];
+        _button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
         _button.backgroundColor = [UIColor clearColor];
         [_button addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_button];
@@ -36,6 +37,12 @@
         [_view addSubview:_label];
     }
     return self;
+}
+
+- (void)setGap:(CGFloat)gap{
+    _view.frame = CGRectMake(0, 0, _frame.size.width - gap, _frame.size.height);
+    _button.frame = CGRectMake(0, 0, _frame.size.width-_gap, _frame.size.height);
+    _label.frame = CGRectMake(0, 20, _frame.size.width, 40);
 }
 
 - (void)buttonClick:(UIButton *)btn{
