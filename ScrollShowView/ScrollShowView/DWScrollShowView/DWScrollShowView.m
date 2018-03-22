@@ -73,14 +73,7 @@
     self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width * (self.rollDataArr.count + 2), 0);
 }
 
-#pragma mark - UIScrollViewDelegate 方法
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    _curIndex = scrollView.contentOffset.x  / self.scrollView.frame.size.width;
-    if (_curIndex == self.rollDataArr.count + 1) {
-        scrollView.contentOffset = CGPointMake(self.scrollView.frame.size.width, 0);
-    }else if (_curIndex == 0){
-        scrollView.contentOffset = CGPointMake(self.scrollView.frame.size.width * self.rollDataArr.count, 0);
-    }
+- (void)setViewAlpha{
     UIWindow * window=[[[UIApplication sharedApplication] delegate] window];
     for (int i = 0; i < self.rollDataArr.count + 2; i++) {
         NSInteger index = i + 400;
@@ -96,20 +89,19 @@
     }
 }
 
--(void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    UIWindow * window=[[[UIApplication sharedApplication] delegate] window];
-    for (int i = 0; i < self.rollDataArr.count + 2; i++) {
-        NSInteger index = i + 400;
-        UIView *view = [self viewWithTag:index];
-        CGRect rect=[view convertRect: view.bounds toView:window];
-        if (i == _curIndex) {
-            view.alpha = 1.0f;
-        }else if (fabs(rect.origin.x) > self.scrollView.frame.size.width*2){
-            view.alpha = 0;
-        }else{
-            view.alpha = 1-(fabs(rect.origin.x)/self.scrollView.frame.size.width)+0.4;
-        }
+#pragma mark - UIScrollViewDelegate 方法
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    _curIndex = scrollView.contentOffset.x  / self.scrollView.frame.size.width;
+    if (_curIndex == self.rollDataArr.count + 1) {
+        scrollView.contentOffset = CGPointMake(self.scrollView.frame.size.width, 0);
+    }else if (_curIndex == 0){
+        scrollView.contentOffset = CGPointMake(self.scrollView.frame.size.width * self.rollDataArr.count, 0);
     }
+    [self setViewAlpha];
+}
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    [self setViewAlpha];
 }
 
 #pragma mark - 轻拍手势的方法
